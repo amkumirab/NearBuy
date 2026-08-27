@@ -110,6 +110,7 @@ void main() {
         notificationsEnabled: Value(false),
       ),
     );
+    await repository.saveLastMapLocation(45.4642, 9.19);
 
     await repository.deleteAllData();
     final settings = await repository.readSettings();
@@ -117,5 +118,16 @@ void main() {
     expect(settings.themeMode, 'system');
     expect(settings.defaultRadius, 700);
     expect(settings.notificationsEnabled, isTrue);
+    expect(settings.lastMapLatitude, isNull);
+    expect(settings.lastMapLongitude, isNull);
+  });
+
+  test('remembers the last confirmed map location', () async {
+    await repository.saveLastMapLocation(35.6892, 51.3890);
+
+    final settings = await repository.readSettings();
+
+    expect(settings.lastMapLatitude, 35.6892);
+    expect(settings.lastMapLongitude, 51.3890);
   });
 }

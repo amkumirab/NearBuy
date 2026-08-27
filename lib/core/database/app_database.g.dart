@@ -2678,6 +2678,28 @@ class $SettingsEntriesTable extends SettingsEntries
     requiredDuringInsert: false,
     defaultValue: const Constant(3),
   );
+  static const VerificationMeta _lastMapLatitudeMeta = const VerificationMeta(
+    'lastMapLatitude',
+  );
+  @override
+  late final GeneratedColumn<double> lastMapLatitude = GeneratedColumn<double>(
+    'last_map_latitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastMapLongitudeMeta = const VerificationMeta(
+    'lastMapLongitude',
+  );
+  @override
+  late final GeneratedColumn<double> lastMapLongitude = GeneratedColumn<double>(
+    'last_map_longitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _notificationsEnabledMeta =
       const VerificationMeta('notificationsEnabled');
   @override
@@ -2728,6 +2750,8 @@ class $SettingsEntriesTable extends SettingsEntries
     themeMode,
     defaultRadius,
     cooldownHours,
+    lastMapLatitude,
+    lastMapLongitude,
     notificationsEnabled,
     soundEnabled,
     vibrationEnabled,
@@ -2768,6 +2792,24 @@ class $SettingsEntriesTable extends SettingsEntries
         cooldownHours.isAcceptableOrUnknown(
           data['cooldown_hours']!,
           _cooldownHoursMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_map_latitude')) {
+      context.handle(
+        _lastMapLatitudeMeta,
+        lastMapLatitude.isAcceptableOrUnknown(
+          data['last_map_latitude']!,
+          _lastMapLatitudeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_map_longitude')) {
+      context.handle(
+        _lastMapLongitudeMeta,
+        lastMapLongitude.isAcceptableOrUnknown(
+          data['last_map_longitude']!,
+          _lastMapLongitudeMeta,
         ),
       );
     }
@@ -2823,6 +2865,14 @@ class $SettingsEntriesTable extends SettingsEntries
         DriftSqlType.int,
         data['${effectivePrefix}cooldown_hours'],
       )!,
+      lastMapLatitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}last_map_latitude'],
+      ),
+      lastMapLongitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}last_map_longitude'],
+      ),
       notificationsEnabled: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}notifications_enabled'],
@@ -2849,6 +2899,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   final String themeMode;
   final int defaultRadius;
   final int cooldownHours;
+  final double? lastMapLatitude;
+  final double? lastMapLongitude;
   final bool notificationsEnabled;
   final bool soundEnabled;
   final bool vibrationEnabled;
@@ -2857,6 +2909,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.themeMode,
     required this.defaultRadius,
     required this.cooldownHours,
+    this.lastMapLatitude,
+    this.lastMapLongitude,
     required this.notificationsEnabled,
     required this.soundEnabled,
     required this.vibrationEnabled,
@@ -2868,6 +2922,12 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['theme_mode'] = Variable<String>(themeMode);
     map['default_radius'] = Variable<int>(defaultRadius);
     map['cooldown_hours'] = Variable<int>(cooldownHours);
+    if (!nullToAbsent || lastMapLatitude != null) {
+      map['last_map_latitude'] = Variable<double>(lastMapLatitude);
+    }
+    if (!nullToAbsent || lastMapLongitude != null) {
+      map['last_map_longitude'] = Variable<double>(lastMapLongitude);
+    }
     map['notifications_enabled'] = Variable<bool>(notificationsEnabled);
     map['sound_enabled'] = Variable<bool>(soundEnabled);
     map['vibration_enabled'] = Variable<bool>(vibrationEnabled);
@@ -2880,6 +2940,12 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       themeMode: Value(themeMode),
       defaultRadius: Value(defaultRadius),
       cooldownHours: Value(cooldownHours),
+      lastMapLatitude: lastMapLatitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMapLatitude),
+      lastMapLongitude: lastMapLongitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMapLongitude),
       notificationsEnabled: Value(notificationsEnabled),
       soundEnabled: Value(soundEnabled),
       vibrationEnabled: Value(vibrationEnabled),
@@ -2896,6 +2962,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       themeMode: serializer.fromJson<String>(json['themeMode']),
       defaultRadius: serializer.fromJson<int>(json['defaultRadius']),
       cooldownHours: serializer.fromJson<int>(json['cooldownHours']),
+      lastMapLatitude: serializer.fromJson<double?>(json['lastMapLatitude']),
+      lastMapLongitude: serializer.fromJson<double?>(json['lastMapLongitude']),
       notificationsEnabled: serializer.fromJson<bool>(
         json['notificationsEnabled'],
       ),
@@ -2911,6 +2979,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'themeMode': serializer.toJson<String>(themeMode),
       'defaultRadius': serializer.toJson<int>(defaultRadius),
       'cooldownHours': serializer.toJson<int>(cooldownHours),
+      'lastMapLatitude': serializer.toJson<double?>(lastMapLatitude),
+      'lastMapLongitude': serializer.toJson<double?>(lastMapLongitude),
       'notificationsEnabled': serializer.toJson<bool>(notificationsEnabled),
       'soundEnabled': serializer.toJson<bool>(soundEnabled),
       'vibrationEnabled': serializer.toJson<bool>(vibrationEnabled),
@@ -2922,6 +2992,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     String? themeMode,
     int? defaultRadius,
     int? cooldownHours,
+    Value<double?> lastMapLatitude = const Value.absent(),
+    Value<double?> lastMapLongitude = const Value.absent(),
     bool? notificationsEnabled,
     bool? soundEnabled,
     bool? vibrationEnabled,
@@ -2930,6 +3002,12 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     themeMode: themeMode ?? this.themeMode,
     defaultRadius: defaultRadius ?? this.defaultRadius,
     cooldownHours: cooldownHours ?? this.cooldownHours,
+    lastMapLatitude: lastMapLatitude.present
+        ? lastMapLatitude.value
+        : this.lastMapLatitude,
+    lastMapLongitude: lastMapLongitude.present
+        ? lastMapLongitude.value
+        : this.lastMapLongitude,
     notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
     soundEnabled: soundEnabled ?? this.soundEnabled,
     vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
@@ -2944,6 +3022,12 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       cooldownHours: data.cooldownHours.present
           ? data.cooldownHours.value
           : this.cooldownHours,
+      lastMapLatitude: data.lastMapLatitude.present
+          ? data.lastMapLatitude.value
+          : this.lastMapLatitude,
+      lastMapLongitude: data.lastMapLongitude.present
+          ? data.lastMapLongitude.value
+          : this.lastMapLongitude,
       notificationsEnabled: data.notificationsEnabled.present
           ? data.notificationsEnabled.value
           : this.notificationsEnabled,
@@ -2963,6 +3047,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('themeMode: $themeMode, ')
           ..write('defaultRadius: $defaultRadius, ')
           ..write('cooldownHours: $cooldownHours, ')
+          ..write('lastMapLatitude: $lastMapLatitude, ')
+          ..write('lastMapLongitude: $lastMapLongitude, ')
           ..write('notificationsEnabled: $notificationsEnabled, ')
           ..write('soundEnabled: $soundEnabled, ')
           ..write('vibrationEnabled: $vibrationEnabled')
@@ -2976,6 +3062,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     themeMode,
     defaultRadius,
     cooldownHours,
+    lastMapLatitude,
+    lastMapLongitude,
     notificationsEnabled,
     soundEnabled,
     vibrationEnabled,
@@ -2988,6 +3076,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.themeMode == this.themeMode &&
           other.defaultRadius == this.defaultRadius &&
           other.cooldownHours == this.cooldownHours &&
+          other.lastMapLatitude == this.lastMapLatitude &&
+          other.lastMapLongitude == this.lastMapLongitude &&
           other.notificationsEnabled == this.notificationsEnabled &&
           other.soundEnabled == this.soundEnabled &&
           other.vibrationEnabled == this.vibrationEnabled);
@@ -2998,6 +3088,8 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<String> themeMode;
   final Value<int> defaultRadius;
   final Value<int> cooldownHours;
+  final Value<double?> lastMapLatitude;
+  final Value<double?> lastMapLongitude;
   final Value<bool> notificationsEnabled;
   final Value<bool> soundEnabled;
   final Value<bool> vibrationEnabled;
@@ -3007,6 +3099,8 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
     this.themeMode = const Value.absent(),
     this.defaultRadius = const Value.absent(),
     this.cooldownHours = const Value.absent(),
+    this.lastMapLatitude = const Value.absent(),
+    this.lastMapLongitude = const Value.absent(),
     this.notificationsEnabled = const Value.absent(),
     this.soundEnabled = const Value.absent(),
     this.vibrationEnabled = const Value.absent(),
@@ -3017,6 +3111,8 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
     this.themeMode = const Value.absent(),
     this.defaultRadius = const Value.absent(),
     this.cooldownHours = const Value.absent(),
+    this.lastMapLatitude = const Value.absent(),
+    this.lastMapLongitude = const Value.absent(),
     this.notificationsEnabled = const Value.absent(),
     this.soundEnabled = const Value.absent(),
     this.vibrationEnabled = const Value.absent(),
@@ -3027,6 +3123,8 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<String>? themeMode,
     Expression<int>? defaultRadius,
     Expression<int>? cooldownHours,
+    Expression<double>? lastMapLatitude,
+    Expression<double>? lastMapLongitude,
     Expression<bool>? notificationsEnabled,
     Expression<bool>? soundEnabled,
     Expression<bool>? vibrationEnabled,
@@ -3037,6 +3135,8 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
       if (themeMode != null) 'theme_mode': themeMode,
       if (defaultRadius != null) 'default_radius': defaultRadius,
       if (cooldownHours != null) 'cooldown_hours': cooldownHours,
+      if (lastMapLatitude != null) 'last_map_latitude': lastMapLatitude,
+      if (lastMapLongitude != null) 'last_map_longitude': lastMapLongitude,
       if (notificationsEnabled != null)
         'notifications_enabled': notificationsEnabled,
       if (soundEnabled != null) 'sound_enabled': soundEnabled,
@@ -3050,6 +3150,8 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
     Value<String>? themeMode,
     Value<int>? defaultRadius,
     Value<int>? cooldownHours,
+    Value<double?>? lastMapLatitude,
+    Value<double?>? lastMapLongitude,
     Value<bool>? notificationsEnabled,
     Value<bool>? soundEnabled,
     Value<bool>? vibrationEnabled,
@@ -3060,6 +3162,8 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
       themeMode: themeMode ?? this.themeMode,
       defaultRadius: defaultRadius ?? this.defaultRadius,
       cooldownHours: cooldownHours ?? this.cooldownHours,
+      lastMapLatitude: lastMapLatitude ?? this.lastMapLatitude,
+      lastMapLongitude: lastMapLongitude ?? this.lastMapLongitude,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       soundEnabled: soundEnabled ?? this.soundEnabled,
       vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
@@ -3081,6 +3185,12 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
     }
     if (cooldownHours.present) {
       map['cooldown_hours'] = Variable<int>(cooldownHours.value);
+    }
+    if (lastMapLatitude.present) {
+      map['last_map_latitude'] = Variable<double>(lastMapLatitude.value);
+    }
+    if (lastMapLongitude.present) {
+      map['last_map_longitude'] = Variable<double>(lastMapLongitude.value);
     }
     if (notificationsEnabled.present) {
       map['notifications_enabled'] = Variable<bool>(notificationsEnabled.value);
@@ -3104,6 +3214,8 @@ class SettingsEntriesCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('themeMode: $themeMode, ')
           ..write('defaultRadius: $defaultRadius, ')
           ..write('cooldownHours: $cooldownHours, ')
+          ..write('lastMapLatitude: $lastMapLatitude, ')
+          ..write('lastMapLongitude: $lastMapLongitude, ')
           ..write('notificationsEnabled: $notificationsEnabled, ')
           ..write('soundEnabled: $soundEnabled, ')
           ..write('vibrationEnabled: $vibrationEnabled, ')
@@ -5167,6 +5279,8 @@ typedef $$SettingsEntriesTableCreateCompanionBuilder =
       Value<String> themeMode,
       Value<int> defaultRadius,
       Value<int> cooldownHours,
+      Value<double?> lastMapLatitude,
+      Value<double?> lastMapLongitude,
       Value<bool> notificationsEnabled,
       Value<bool> soundEnabled,
       Value<bool> vibrationEnabled,
@@ -5178,6 +5292,8 @@ typedef $$SettingsEntriesTableUpdateCompanionBuilder =
       Value<String> themeMode,
       Value<int> defaultRadius,
       Value<int> cooldownHours,
+      Value<double?> lastMapLatitude,
+      Value<double?> lastMapLongitude,
       Value<bool> notificationsEnabled,
       Value<bool> soundEnabled,
       Value<bool> vibrationEnabled,
@@ -5210,6 +5326,16 @@ class $$SettingsEntriesTableFilterComposer
 
   ColumnFilters<int> get cooldownHours => $composableBuilder(
     column: $table.cooldownHours,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get lastMapLatitude => $composableBuilder(
+    column: $table.lastMapLatitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get lastMapLongitude => $composableBuilder(
+    column: $table.lastMapLongitude,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5258,6 +5384,16 @@ class $$SettingsEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get lastMapLatitude => $composableBuilder(
+    column: $table.lastMapLatitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get lastMapLongitude => $composableBuilder(
+    column: $table.lastMapLongitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get notificationsEnabled => $composableBuilder(
     column: $table.notificationsEnabled,
     builder: (column) => ColumnOrderings(column),
@@ -5296,6 +5432,16 @@ class $$SettingsEntriesTableAnnotationComposer
 
   GeneratedColumn<int> get cooldownHours => $composableBuilder(
     column: $table.cooldownHours,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get lastMapLatitude => $composableBuilder(
+    column: $table.lastMapLatitude,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get lastMapLongitude => $composableBuilder(
+    column: $table.lastMapLongitude,
     builder: (column) => column,
   );
 
@@ -5352,6 +5498,8 @@ class $$SettingsEntriesTableTableManager
                 Value<String> themeMode = const Value.absent(),
                 Value<int> defaultRadius = const Value.absent(),
                 Value<int> cooldownHours = const Value.absent(),
+                Value<double?> lastMapLatitude = const Value.absent(),
+                Value<double?> lastMapLongitude = const Value.absent(),
                 Value<bool> notificationsEnabled = const Value.absent(),
                 Value<bool> soundEnabled = const Value.absent(),
                 Value<bool> vibrationEnabled = const Value.absent(),
@@ -5361,6 +5509,8 @@ class $$SettingsEntriesTableTableManager
                 themeMode: themeMode,
                 defaultRadius: defaultRadius,
                 cooldownHours: cooldownHours,
+                lastMapLatitude: lastMapLatitude,
+                lastMapLongitude: lastMapLongitude,
                 notificationsEnabled: notificationsEnabled,
                 soundEnabled: soundEnabled,
                 vibrationEnabled: vibrationEnabled,
@@ -5372,6 +5522,8 @@ class $$SettingsEntriesTableTableManager
                 Value<String> themeMode = const Value.absent(),
                 Value<int> defaultRadius = const Value.absent(),
                 Value<int> cooldownHours = const Value.absent(),
+                Value<double?> lastMapLatitude = const Value.absent(),
+                Value<double?> lastMapLongitude = const Value.absent(),
                 Value<bool> notificationsEnabled = const Value.absent(),
                 Value<bool> soundEnabled = const Value.absent(),
                 Value<bool> vibrationEnabled = const Value.absent(),
@@ -5381,6 +5533,8 @@ class $$SettingsEntriesTableTableManager
                 themeMode: themeMode,
                 defaultRadius: defaultRadius,
                 cooldownHours: cooldownHours,
+                lastMapLatitude: lastMapLatitude,
+                lastMapLongitude: lastMapLongitude,
                 notificationsEnabled: notificationsEnabled,
                 soundEnabled: soundEnabled,
                 vibrationEnabled: vibrationEnabled,

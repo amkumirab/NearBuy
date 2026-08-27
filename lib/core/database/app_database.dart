@@ -82,6 +82,8 @@ class SettingsEntries extends Table {
   TextColumn get themeMode => text().withDefault(const Constant('system'))();
   IntColumn get defaultRadius => integer().withDefault(const Constant(700))();
   IntColumn get cooldownHours => integer().withDefault(const Constant(3))();
+  RealColumn get lastMapLatitude => real().nullable()();
+  RealColumn get lastMapLongitude => real().nullable()();
   BoolColumn get notificationsEnabled =>
       boolean().withDefault(const Constant(true))();
   BoolColumn get soundEnabled => boolean().withDefault(const Constant(true))();
@@ -108,11 +110,23 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.defaults() : super(driftDatabase(name: 'nearbuy'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (migrator) => migrator.createAll(),
+    onUpgrade: (migrator, from, to) async {
+      if (from < 2) {
+        await migrator.addColumn(
+          settingsEntries,
+          settingsEntries.lastMapLatitude,
+        );
+        await migrator.addColumn(
+          settingsEntries,
+          settingsEntries.lastMapLongitude,
+        );
+      }
+    },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
       await into(settingsEntries).insert(

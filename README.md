@@ -11,7 +11,8 @@
 ## Features
 
 - Create multiple shopping lists with quantities, notes and drag-and-drop ordering
-- Link a list to a store by searching for an address or selecting a point on the map
+- Link a list to a store with multi-result address search or precise map selection
+- Start location picking from the current or most recently confirmed position
 - View saved stores, markers and reminder radii on an interactive OpenStreetMap map
 - Receive native proximity reminders when entering a saved store area
 - Use a focused shopping mode with progress, elapsed time and haptic feedback

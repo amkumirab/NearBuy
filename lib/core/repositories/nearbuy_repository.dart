@@ -321,6 +321,14 @@ class NearBuyRepository {
         database.settingsEntries,
       )..where((row) => row.id.equals('main'))).write(values);
 
+  Future<void> saveLastMapLocation(double latitude, double longitude) =>
+      updateSettings(
+        SettingsEntriesCompanion(
+          lastMapLatitude: Value(latitude),
+          lastMapLongitude: Value(longitude),
+        ),
+      );
+
   Future<void> clearHistory() => database.transaction(() async {
     await database.delete(database.shoppingSessionItems).go();
     await database.delete(database.shoppingSessions).go();
@@ -339,6 +347,8 @@ class NearBuyRepository {
         themeMode: Value('system'),
         defaultRadius: Value(700),
         cooldownHours: Value(3),
+        lastMapLatitude: Value(null),
+        lastMapLongitude: Value(null),
         notificationsEnabled: Value(true),
         soundEnabled: Value(true),
         vibrationEnabled: Value(true),
